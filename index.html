@@ -1,0 +1,10 @@
+fetch('https://play.svix.com/in/e_M4lDWp8dx4feIfypDfe70NF82TN/', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ message: "Test webhook" })
+})
+.then(response => response.json())
+.then(data => console.log('Réponse du webhook:', data))
+.catch(error => console.error('Erreur avec le webhook:', error));
