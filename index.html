@@ -1,96 +1,41 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Envoyer un message au Webhook</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f0f0;
+const webhookUrl = "https://discord.com/api/webhooks/1346538027358486539/ROsPean54YkeMWEmlbBlvgOoGQEbCeXjNwV2IvC8z15z_6IvM2RlFif5jlYaSsTQE6KK"; // Remplace par ton webhook Discord
+
+function sendMessage() {
+    const message = document.getElementById('message').value;
+    const statusElement = document.getElementById('status');
+
+    if (!message.trim()) {
+        statusElement.textContent = "Veuillez entrer un message valide.";
+        statusElement.style.color = "red";
+        return;
+    }
+
+    // Créer l'objet de données à envoyer, adapté à Discord
+    const data = {
+        content: message // Le champ attendu par Discord
+    };
+
+    // Envoyer la requête POST au webhook Discord
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => {
+        if (response.ok) {
+            statusElement.textContent = "Message envoyé avec succès!";
+            statusElement.style.color = "green";
+            document.getElementById('message').value = ''; // Effacer le champ de message
+        } else {
+            statusElement.textContent = "Erreur lors de l'envoi du message.";
+            statusElement.style.color = "red";
         }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 300px;
-        }
-        input, button {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            font-size: 1.1em;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="container">
-        <h2>Envoyer un message au Webhook</h2>
-        <input type="text" id="message" placeholder="Entrez votre message" />
-        <button onclick="sendMessage()">Envoyer</button>
-        <p id="status"></p>
-    </div>
-
-    <script>
-        const webhookUrl = "https://play.svix.com/in/e_M4lDWp8dx4feIfypDfe70NF82TN/"; // Remplacez par votre URL de webhook
-
-        function sendMessage() {
-            const message = document.getElementById('message').value;
-            const statusElement = document.getElementById('status');
-
-            if (!message) {
-                statusElement.textContent = "Veuillez entrer un message.";
-                statusElement.style.color = "red";
-                return;
-            }
-
-            // Créer l'objet de données à envoyer
-            const data = {
-                message: message
-            };
-
-            // Envoyer la requête POST au webhook
-            fetch(webhookUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            })
-            .then(response => {
-                if (response.ok) {
-                    statusElement.textContent = "Message envoyé avec succès!";
-                    statusElement.style.color = "green";
-                    document.getElementById('message').value = ''; // Effacer le champ de message
-                } else {
-                    statusElement.textContent = "Erreur lors de l'envoi du message.";
-                    statusElement.style.color = "red";
-                }
-            })
-            .catch(error => {
-                statusElement.textContent = "Une erreur est survenue.";
-                statusElement.style.color = "red";
-            });
-        }
-    </script>
-
-</body>
-</html>
+    })
+    .catch(error => {
+        console.error('Erreur lors de l\'envoi du message:', error);
+        statusElement.textContent = "Une erreur est survenue.";
+        statusElement.style.color = "red";
+    });
+}
